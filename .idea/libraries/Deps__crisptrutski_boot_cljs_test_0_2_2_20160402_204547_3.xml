@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Deps: crisptrutski/boot-cljs-test:0.2.2-20160402.204547-3">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/crisptrutski/boot-cljs-test/0.2.2-SNAPSHOT/boot-cljs-test-0.2.2-SNAPSHOT.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
