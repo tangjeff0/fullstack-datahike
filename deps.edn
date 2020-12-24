@@ -1,27 +1,38 @@
-{:paths ["src"]
+{:paths   ["src/clj" "src/cljs" "src/cljc"]
 
- :deps {thheller/shadow-cljs          {:mvn/version "2.11.10"}
-        org.clojure/clojure           {:mvn/version "1.10.1"},
-        reagent                       {:mvn/version "1.0.0"},
-        pez/clerk                     {:mvn/version "1.0.0"},
-        ring/ring-defaults            {:mvn/version "0.3.2"},
-        org.clojure/clojurescript     {:mvn/version "1.10.773"},
-        reagent-utils                 {:mvn/version "0.3.3"},
-        ring                          {:mvn/version "1.8.2"},
-        hiccup                        {:mvn/version "1.0.5"},
-        yogthos/config                {:mvn/version "1.1.7"},
-        ring-server                   {:mvn/version "0.5.0"},
-        venantius/accountant          {:mvn/version "0.2.5"},
-        metosin/reitit                {:mvn/version "0.5.10"}
+ :aliases {:main {:main-opts ["-m" "app.core"]}
+           :nREPL {:extra-deps {nrepl/nrepl {:mvn/version "0.8.3"}}}}
 
-        io.replikativ/datahike        {:git/url "https://github.com/replikativ/datahike/"
-                                       :sha "684cf719d93618a4630565078f3efb4b85858070"}
-        io.replikativ/hitchhiker-tree {:git/url "https://github.com/groundedSAGE/hitchhiker-tree.git"
-                                       :sha "4deba10bf691613053c06a5007a31aa86b3e9e22"}
-        io.replikativ/konserve        {:git/url "https://github.com/groundedSAGE/konserve.git"
-                                       :sha "88eecbdb9a831a46f5eaf652b10cd06668b5ccc1"}
-        io.replikativ/superv.async    {:git/url "https://github.com/groundedSAGE/superv.async.git"
-                                       :sha "bc1bf6e4336baee365e7f0da9b3022e450e58750"}
-        io.lambdaforge/datalog-parser  {:git/url "https://github.com/groundedSAGE/datalog-parser.git"
-                                        :sha "6493b5d3f1a00bd57e825dc2755d19030f407819"}}}
+
+ :deps    {org.clojure/clojure           {:mvn/version "1.10.1"},
+           thheller/shadow-cljs          {:mvn/version "2.11.10"}
+
+           ;; frontend
+           reagent                       {:mvn/version "1.0.0"},
+           pez/clerk                     {:mvn/version "1.0.0"},
+           ring/ring-defaults            {:mvn/version "0.3.2"},
+           org.clojure/clojurescript     {:mvn/version "1.10.773"},
+           reagent-utils                 {:mvn/version "0.3.3"},
+           ring                          {:mvn/version "1.8.2"},
+           hiccup                        {:mvn/version "1.0.5"},
+           yogthos/config                {:mvn/version "1.1.7"},
+           ring-server                   {:mvn/version "0.5.0"},
+           venantius/accountant          {:mvn/version "0.2.5"},
+           metosin/reitit                {:mvn/version "0.5.10"}
+
+           ;; backend
+           org.immutant/web              {:mvn/version "2.1.10"}
+           compojure                     {:mvn/version "1.6.1"}
+           ring/ring-core                {:mvn/version "1.7.1"}
+
+           io.replikativ/datahike        {:git/url "https://github.com/replikativ/datahike/"
+                                          :sha     "684cf719d93618a4630565078f3efb4b85858070"}
+           io.replikativ/hitchhiker-tree {:git/url "https://github.com/groundedSAGE/hitchhiker-tree.git"
+                                          :sha     "4deba10bf691613053c06a5007a31aa86b3e9e22"}
+           io.replikativ/konserve        {:git/url "https://github.com/groundedSAGE/konserve.git"
+                                          :sha     "88eecbdb9a831a46f5eaf652b10cd06668b5ccc1"}
+           io.replikativ/superv.async    {:git/url "https://github.com/groundedSAGE/superv.async.git"
+                                          :sha     "bc1bf6e4336baee365e7f0da9b3022e450e58750"}
+           io.lambdaforge/datalog-parser {:git/url "https://github.com/groundedSAGE/datalog-parser.git"
+                                          :sha     "6493b5d3f1a00bd57e825dc2755d19030f407819"}}}
 
