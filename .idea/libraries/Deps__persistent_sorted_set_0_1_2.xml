@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Deps: persistent-sorted-set:0.1.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/persistent-sorted-set/persistent-sorted-set/0.1.2/persistent-sorted-set-0.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

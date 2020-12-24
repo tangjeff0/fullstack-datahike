@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Deps: io.replikativ/zufall:0.1.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/replikativ/zufall/0.1.0/zufall-0.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
