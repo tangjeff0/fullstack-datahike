@@ -19,14 +19,15 @@
 (def out (ByteArrayOutputStream. 4096))
 (def json-writer (t/writer out :json))
 
+(def transit-str (->> "./index.transit"
+                      slurp))
+
 (defonce channels (atom #{}))
 
 (defn connect! [channel]
   (log/info "channel open")
   (swap! channels conj channel)
-  (prn channel)
-  #_(d/write-transit-str (d/datoms @db/conn :eavt)))
-  ;;(async/send! channel (t/write json-writer {:type :connect :message "hello world"})))
+  (async/send! channel (dt/write-transit-str {:type :connect :message transit-str})))
 
 (defn disconnect! [channel {:keys [code reason]}]
   (log/info "close code:" code "reason:" reason)

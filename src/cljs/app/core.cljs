@@ -60,7 +60,10 @@
 
 (defn update-messages! [message]
   (case (:type message)
-    :tx (p/transact! conn (:message message))))
+    :tx (p/transact! conn (:message message))
+    ;; FIX: reads transit str twice
+    :connect (let [db (dt/read-transit-str (:message message))]
+               (d/reset-conn! conn db))))
 
 
 (defn mount-components []
