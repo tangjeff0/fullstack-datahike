@@ -1,10 +1,7 @@
 (ns app.ws
-  (:require [cognitect.transit :as t]))
+  (:require [datascript.transit :as dt]))
 
 (defonce ws-chan (atom nil))
-
-(def json-reader (t/reader :json))
-(def json-writer (t/writer :json))
 
 (defn receive-transit-msg!
   [update-fn]
@@ -12,13 +9,13 @@
     (update-fn
       (->> msg
            .-data
-           (t/read json-reader)))))
+           dt/read-transit-str))))
 
 (defn send-transit-msg!
   [msg]
   (if @ws-chan
     (.send @ws-chan
-           (t/write json-writer msg))
+           (dt/write-transit-str msg))
     (throw (js/Error. "Websocket is not available!"))))
 
 (defn make-websocket! [url receive-handler]

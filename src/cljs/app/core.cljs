@@ -3,71 +3,46 @@
   (:require [reagent.core :as r]
             [reagent.dom :as rdom]
             [app.ws :as ws]
-            [datahike.api :as d]
-            [datahike.impl.entity :as de]
+            [posh.reagent :as p]
+            [datascript.core :as d]
+            [datascript.transit :as dt]))
             ;;[clojure.edn :as edn]
-            [clojure.core.async :as async :refer [go <!]]))
+            ;;[clojure.core.async :as async :refer [go <!]]))
 
 
-;; Datahike
-
-(def schema [{:db/ident       :name
-              :db/valueType   :db.type/string
-              :db/cardinality :db.cardinality/one}
-             {:db/ident       :age
-              :db/valueType   :db.type/long
-              :db/cardinality :db.cardinality/one}])
-
-(def cfg {:store              {:backend :indexeddb :id "idb-sandbox"}
-          :keep-history?      false
-          :schema-flexibility :write
-          :initial-tx         schema})
-
-(comment
-  (d/create-database cfg)
-
-  (go (def conn-idb (<! (d/connect cfg))))
-
-  (d/transact conn-idb [{:name "Alice"
-                         :age  26}
-                        {:name    "Bob"
-                         :age     35
-                         :_friend [{:name "Mike"
-                                    :age  28}]}
-                        {:name    "Charlie"
-                         :age     45
-                         :sibling [[:name "Alice"] [:name "Bob"]]}])
-
-  (go (println (<! (d/q '[:find ?e ?a ?v
-                          :in $ ?a
-                          :where [?e ?a ?v ?t]]
-                        @conn-idb
-                        35)))))
+(def conn (d/create-conn))
+(p/posh! conn)
 
 ;; Websockets
-
 (defonce messages (r/atom []))
 
 (defn message-list []
-  [:ul
-   (for [[i message] (map-indexed vector @messages)]
-     ^{:key i}
-     [:li message])])
+  (let [messages (p/q '[:find ?e ?a ?v
+                        :where [?e ?a ?v]]
+                      conn)]
+    [:ul
+     (for [x @messages]
+       ^{:key (str x)}
+       [:li (str x)])]))
+
+(defn post-message
+  [value]
+  (let [tx-report (d/with @conn [{:db/id -1 :block/message value}])
+        tx-data   (:tx-data tx-report)]
+    (ws/send-transit-msg! {:type    :tx
+                           :message tx-data})))
 
 (defn message-input []
   (let [value (r/atom nil)]
     (fn []
-      [:textarea
+      [:input
        {:type        :text
         :placeholder "Type in a message and press enter"
-        :style       {:width  "400px"
-                      :height "300px"}
         :value       @value
         :on-change   #(reset! value (-> % .-target .-value))
         :on-key-down
                      #(when (= (.-keyCode %) 13)
-                        (ws/send-transit-msg!
-                          {:message @value})
+                        (post-message @value)
                         (reset! value nil))}])))
 
 (defn home-page []
@@ -83,8 +58,9 @@
      [message-input]]]])
 
 
-(defn update-messages! [{:keys [message]}]
-  (swap! messages #(vec (take 10 (conj % message)))))
+(defn update-messages! [message]
+  (case (:type message)
+    :tx (p/transact! conn (:message message))))
 
 
 (defn mount-components []

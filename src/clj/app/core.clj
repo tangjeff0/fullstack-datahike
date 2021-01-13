@@ -1,28 +1,32 @@
 (ns app.core
   (:require
+    [app.db :as db]
     [immutant.web :as web]
     [clojure.tools.logging :as log]
+    ;;[datahike.api :as d]
+    [cognitect.transit :as t]
+    [datascript.core :as d]
+    [datascript.transit :as dt]
     [immutant.web.async :as async]
     [immutant.web.middleware :as web-middleware]
     [compojure.route :as route]
     [compojure.core :refer (ANY GET defroutes)]
     [nrepl.server :as nrepl]
-    [ring.util.response :refer (response redirect content-type)]
-    #_[datahike.api :as d])
+    [ring.util.response :refer (response redirect content-type)])
+  (:import [java.io ByteArrayInputStream ByteArrayOutputStream])
   (:gen-class))
 
-;; Get the error below when requiring datahike
-#_(require '[datahike.api :as d])
-
-;;Syntax error compiling at (datahike/query.cljc:806:32).
-;;No such var: ha/map<
+(def out (ByteArrayOutputStream. 4096))
+(def json-writer (t/writer out :json))
 
 (defonce channels (atom #{}))
 
 (defn connect! [channel]
   (log/info "channel open")
-  (swap! channels conj channel))
-
+  (swap! channels conj channel)
+  (prn channel)
+  #_(d/write-transit-str (d/datoms @db/conn :eavt)))
+  ;;(async/send! channel (t/write json-writer {:type :connect :message "hello world"})))
 
 (defn disconnect! [channel {:keys [code reason]}]
   (log/info "close code:" code "reason:" reason)
@@ -30,6 +34,7 @@
 
 (defn notify-clients! [channel msg]
   (doseq [channel @channels]
+    (prn "NOTIFY" msg)
     (async/send! channel msg)))
 
 (def websocket-callbacks
